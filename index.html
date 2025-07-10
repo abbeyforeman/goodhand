@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8" />
+<title>a good hand</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+<!-- <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script> -->
+
+<script language="javascript" src="tracery.js"></script>
+
+<script language="javascript" src="newgrammar.js"></script>
+<link rel="stylesheet" href="/style.css" />
+
+<body>
+  
+  
+    <button class="w now title" id="1" onclick="movement(this)">
+       a good hand
+    </button>
+<div id="canvasHolder">
+  
+</div>
+<details>
+  <summary>𓂩</summary>
+  <p id="summary">This is a project created by <a href="https://abbeyforeman.glitch.me/">Abbey Foreman</a> using the library <a href="https://github.com/galaxykate/tracery">tracery.js</a>. There are 4.9×10^12 ways that this story can be generated. Thats over 4 trillion ways! Whatever story you read is the only one of its kind.</p>
+</details>
+
+    <script>
+
+
+        var grammar = tracery.createGrammar(source);
+
+
+        var move = 1;
+        var step = 2;
+
+       let maxTop = 50;
+        const stepSize = 50;
+
+
+        function movement(origin) {
+
+            onlyNow();
+            let me = makeIt(origin, "me");
+            // let you = makeIt(origin, "you");
+
+            let originId = origin.id;
+            console.log('me = ' + me);
+            // console.log('you = ' + you);
+
+            // connect(document.getElementById(originId), document.getElementById(me), "#FFC9E7", 1);
+            // connect(document.getElementById(originId), document.getElementById(you), "#FFC9E7", 1);
+
+            //increment tracery
+            if (move < 30) {
+                move++;
+            }
+
+        function onlyNow() {
+            const buttons = document.querySelectorAll('.me, .w');
+            for (const button of buttons) {
+                if (button.hasAttribute('onclick')) {
+                    button.removeAttribute('onclick');
+                    button.disabled = true;
+                }
+                if (button.classList.contains("now")) {
+                    button.classList.remove('now');
+                }
+            }
+        }
+
+
+
+function makeIt(source, interlocutor) {
+    let sourceY = source.offsetTop;
+    let sourceX = source.offsetLeft;
+
+    // Create button and assign unique id
+    let idea = document.createElement("button");
+    let ideaId = step;
+    idea.setAttribute("id", ideaId);
+    idea.setAttribute('onclick', 'movement(this)');
+    idea.classList.add(interlocutor);
+    idea.classList.add('now');
+
+    // Add tracery text to button
+    let sentence = grammar.flatten("#" + interlocutor + move + "#");
+    idea.innerHTML = sentence;
+
+    // Constrain the button's position within the viewport
+    const top = getRandomNumber(50, window.innerHeight - 50); // Ensure top stays within the viewport
+    const left = getRandomNumber(50, window.innerWidth - 150); // Ensure left stays within the viewport
+
+    idea.style.position = 'absolute'; // Ensure it's positioned absolutely
+    idea.style.top = `${top}px`;
+    idea.style.left = `${left}px`;
+
+    // Append the button to the canvasHolder
+    document.getElementById("canvasHolder").appendChild(idea);
+
+    step++;
+
+    return ideaId;
+}
+
+
+
+
+        function getRandomNumber(min, max) {
+            // Get a random number between 0 and 1.
+            const randomNumber = Math.random();
+
+            // Multiply the random number by the difference between the maximum and minimum numbers.
+            const scaledRandomNumber = randomNumber * (max - min);
+
+            // Add the minimum number to the scaled random number.
+            const randomWholeNumber = Math.floor(scaledRandomNumber) + min;
+
+            // Return the random whole number.
+            return randomWholeNumber;
+        }
+
+
+        function connect(button1, button2, color, thickness) {
+            console.log(button1);
+            console.log(button2);
+
+            var off1 = getOffset(button1);
+            var off2 = getOffset(button2);
+            // bottom right
+            var x1 = off1.left + off1.width;
+            var y1 = off1.top + off1.height;
+            // top right
+            var x2 = off2.left + off2.width;
+            var y2 = off2.top;
+            // distance
+            var length = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            // center
+            var cx = (x1 + x2) / 2 - length / 2;
+            var cy = (y1 + y2) / 2 - thickness / 2;
+            // angle
+            var angle = Math.atan2(y1 - y2, x1 - x2) * (180 / Math.PI);
+            // make hr
+            var htmlLine =
+                "<div style='opacity: 1; padding:0px; margin:0px; height:" +
+                thickness +
+                "px; background-color:" +
+                color +
+                "; line-height:1px; position:absolute; left:" +
+                cx +
+                "px; top:" +
+                cy +
+                "px; width:" +
+                length +
+                "px; -moz-transform:rotate(" +
+                angle +
+                "deg); -webkit-transform:rotate(" +
+                angle +
+                "deg); -o-transform:rotate(" +
+                angle +
+                "deg); -ms-transform:rotate(" +
+                angle +
+                "deg); transform:rotate(" +
+                angle +
+                "deg);' />";
+            //
+            //  alert(htmlLine);
+            document.body.innerHTML += htmlLine;
+        }
+
+        function getOffset(el) {
+            //console.log(el)
+            var rect = el.getBoundingClientRect();
+            return {
+                left: rect.left + window.pageXOffset,
+                top: rect.top + window.pageYOffset,
+                width: rect.width || el.offsetWidth,
+                height: rect.height || el.offsetHeight,
+            };
+        }
+
+            // Copy the array to avoid modifying the original
+            const shuffledArray = [...array];
+
+            while (shuffledArray.length > 0) {
+                // Get a random index within the remaining array length
+                const randomIndex = Math.floor(Math.random() * shuffledArray.length);
+
+                // Compare the item at the random index
+                if (shuffledArray[randomIndex] !== compareValue) {
+                    // Return the picked item if there's no match
+                    return shuffledArray[randomIndex];
+                }
+
+                // Remove the matched item from the shuffled array
+                shuffledArray.splice(randomIndex, 1);
+            }
+
+            // If no item matches without removing all, throw an error
+            throw new Error("No item in the array except the specified value.");
+        }
+
+
+        try {
+            const pickedItem = pickRandomWithoutMatch(myArray, compareValue);
+            console.log("Picked item:", pickedItem);
+        } catch (error) {
+            console.error(error.message);
+        }
+
+
+    </script>
+  
+  
+    <!-- Hidden Content for Clicked Card -->
+    <div id="card-content" class="card-content"></div>
+
+    <script>
+          <!-- Button to trigger card appearance -->
+    <button onclick="displayRandomCard()">Click to Show Random Card</button>
+
+    <!-- Hidden Content for Clicked Card -->
+    <div id="card-content" class="card-content"></div>
+  </script>
+<script>
+    const cardSymbols = [
+        "🂱", "🂲", "🂳", "🂴", "🂵", "🂶", "🂷", "🂸", "🂹", "🂺", "🂻", "🂼", "🂽", "🂾", "🂡", 
+        "🂢", "🂣", "🂤", "🂥", "🂦", "🂧", "🂨", "🂩", "🂪", "🂫", "🬘", "🂭", "🂮", "🃁", "🃂", 
+        "🃃", "🃄", "🃅", "🃆", "🃇", "🃈", "🃉", "🃊", "🃋", "🃌", "🃍", "🃎", "🃑", "🃒", "🃓", 
+        "🃔", "🃕", "🃖", "🃗", "🃘", "🃙", "🃚", "🃛", "🃜", "🃝", "🃞"
+    ];
+
+    document.body.addEventListener('click', (event) => {
+        // Get random card symbol
+        const randomSymbol = cardSymbols[Math.floor(Math.random() * cardSymbols.length)];
+        
+        // Create the element to hold the card symbol
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('card-symbol');
+        cardElement.textContent = randomSymbol;
+
+        // Set a random position
+        const randomX = Math.random() * window.innerWidth;
+        const randomY = Math.random() * window.innerHeight;
+
+        cardElement.style.left = `${randomX}px`;
+        cardElement.style.top = `${randomY}px`;
+
+        // Append to the body
+        document.body.appendChild(cardElement);
+    });
+</script>
+<!-- <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"9082fab61d828cee","version":"2025.1.0","r":1,"token":"3da31c73a4144a51bf6edcac5906ce4c","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script> -->
+</body>
+
+</html>
